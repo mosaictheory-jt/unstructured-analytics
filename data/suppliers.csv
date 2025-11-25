@@ -1,0 +1,7 @@
+supplier_id,supplier_name,contact_email,country,lead_time_days,reliability_rating
+SUP001,TechWorld Distribution,orders@techworld.com,USA,3,4.8
+SUP002,Natural Goods Co,sales@naturalgoods.com,USA,5,4.5
+SUP003,ActiveLife Suppliers,contact@activelife.com,Canada,7,4.6
+SUP004,GreenHome Products,info@greenhome.com,USA,4,4.7
+SUP005,Kitchen Essentials Inc,orders@kitchenessentials.com,Mexico,6,4.4
+

@@ -1,0 +1,12 @@
+customer_id,first_name,last_name,email,city,state,country,join_date,customer_segment
+C001,Sarah,Mitchell,sarah.mitchell@email.com,Austin,Texas,USA,2022-03-15,Premium
+C002,James,Chen,james.chen@email.com,Seattle,Washington,USA,2021-11-02,Standard
+C003,Maria,Rodriguez,maria.r@email.com,Miami,Florida,USA,2023-01-20,Premium
+C004,David,Thompson,d.thompson@email.com,Denver,Colorado,USA,2022-07-08,Standard
+C005,Emily,Nakamura,emily.n@email.com,Portland,Oregon,USA,2021-05-30,VIP
+C006,Michael,O'Brien,m.obrien@email.com,Chicago,Illinois,USA,2022-09-12,Standard
+C007,Lisa,Patel,lisa.patel@email.com,San Francisco,California,USA,2023-02-28,Premium
+C008,Robert,Kim,robert.kim@email.com,Boston,Massachusetts,USA,2021-08-17,VIP
+C009,Amanda,Johnson,a.johnson@email.com,Phoenix,Arizona,USA,2022-12-05,Standard
+C010,William,Garcia,w.garcia@email.com,New York,New York,USA,2023-04-10,Premium
+

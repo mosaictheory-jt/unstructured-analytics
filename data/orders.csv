@@ -1,0 +1,17 @@
+order_id,customer_id,order_date,shipping_method,payment_method,order_status,shipping_address_city,discount_applied
+ORD001,C001,2024-01-15,Express,Credit Card,Delivered,Austin,0.00
+ORD002,C003,2024-01-16,Standard,PayPal,Delivered,Miami,5.00
+ORD003,C005,2024-01-18,Express,Credit Card,Delivered,Portland,10.00
+ORD004,C002,2024-01-20,Standard,Debit Card,Delivered,Seattle,0.00
+ORD005,C008,2024-01-22,Next Day,Credit Card,Delivered,Boston,15.00
+ORD006,C004,2024-01-25,Standard,PayPal,Delivered,Denver,0.00
+ORD007,C007,2024-01-28,Express,Credit Card,Delivered,San Francisco,5.00
+ORD008,C001,2024-02-01,Standard,Credit Card,Delivered,Austin,0.00
+ORD009,C010,2024-02-05,Express,Debit Card,Delivered,New York,10.00
+ORD010,C006,2024-02-08,Standard,PayPal,Shipped,Chicago,0.00
+ORD011,C003,2024-02-10,Next Day,Credit Card,Shipped,Miami,5.00
+ORD012,C009,2024-02-12,Standard,Debit Card,Processing,Phoenix,0.00
+ORD013,C005,2024-02-15,Express,Credit Card,Processing,Portland,20.00
+ORD014,C002,2024-02-18,Standard,PayPal,Pending,Seattle,0.00
+ORD015,C008,2024-02-20,Next Day,Credit Card,Pending,Boston,10.00
+

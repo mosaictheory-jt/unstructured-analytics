@@ -1,0 +1,86 @@
+{
+  "schema_name": "E-Commerce Star Schema",
+  "description": "A relational e-commerce database with customer orders, products, and supplier information",
+  "tables": {
+    "customers": {
+      "description": "Customer dimension table containing customer demographics and segmentation",
+      "primary_key": "customer_id",
+      "fields": {
+        "customer_id": {"type": "string", "description": "Unique identifier for each customer (format: C###)"},
+        "first_name": {"type": "string", "description": "Customer's first name"},
+        "last_name": {"type": "string", "description": "Customer's last name"},
+        "email": {"type": "string", "description": "Customer's email address"},
+        "city": {"type": "string", "description": "City where customer resides"},
+        "state": {"type": "string", "description": "State/province where customer resides"},
+        "country": {"type": "string", "description": "Country where customer resides"},
+        "join_date": {"type": "date", "description": "Date when customer created their account (ISO format)"},
+        "customer_segment": {"type": "string", "description": "Customer tier: Standard, Premium, or VIP based on purchase history"}
+      }
+    },
+    "products": {
+      "description": "Product dimension table with catalog information and pricing",
+      "primary_key": "product_id",
+      "foreign_keys": {"supplier_id": "suppliers.supplier_id"},
+      "fields": {
+        "product_id": {"type": "string", "description": "Unique identifier for each product (format: P###)"},
+        "product_name": {"type": "string", "description": "Full product name as displayed to customers"},
+        "category": {"type": "string", "description": "Main product category (Electronics, Groceries, Sports, Home)"},
+        "subcategory": {"type": "string", "description": "Product subcategory within the main category"},
+        "brand": {"type": "string", "description": "Brand name of the product"},
+        "unit_price": {"type": "decimal", "description": "Current retail price in USD"},
+        "cost_price": {"type": "decimal", "description": "Wholesale cost price in USD"},
+        "supplier_id": {"type": "string", "description": "Reference to the supplier providing this product"}
+      }
+    },
+    "orders": {
+      "description": "Order fact table containing order header information",
+      "primary_key": "order_id",
+      "foreign_keys": {"customer_id": "customers.customer_id"},
+      "fields": {
+        "order_id": {"type": "string", "description": "Unique identifier for each order (format: ORD###)"},
+        "customer_id": {"type": "string", "description": "Reference to the customer who placed the order"},
+        "order_date": {"type": "date", "description": "Date when order was placed (ISO format)"},
+        "shipping_method": {"type": "string", "description": "Shipping speed: Standard, Express, or Next Day"},
+        "payment_method": {"type": "string", "description": "Payment type: Credit Card, Debit Card, or PayPal"},
+        "order_status": {"type": "string", "description": "Current status: Pending, Processing, Shipped, or Delivered"},
+        "shipping_address_city": {"type": "string", "description": "City for delivery address"},
+        "discount_applied": {"type": "decimal", "description": "Total discount amount in USD applied to order"}
+      }
+    },
+    "order_items": {
+      "description": "Order line items fact table with individual products per order",
+      "primary_key": "order_item_id",
+      "foreign_keys": {
+        "order_id": "orders.order_id",
+        "product_id": "products.product_id"
+      },
+      "fields": {
+        "order_item_id": {"type": "string", "description": "Unique identifier for each line item (format: OI###)"},
+        "order_id": {"type": "string", "description": "Reference to the parent order"},
+        "product_id": {"type": "string", "description": "Reference to the product purchased"},
+        "quantity": {"type": "integer", "description": "Number of units purchased"},
+        "unit_price_at_sale": {"type": "decimal", "description": "Price per unit at time of purchase in USD"},
+        "total_price": {"type": "decimal", "description": "Line item total (quantity × unit price) in USD"}
+      }
+    },
+    "suppliers": {
+      "description": "Supplier dimension table with vendor information",
+      "primary_key": "supplier_id",
+      "fields": {
+        "supplier_id": {"type": "string", "description": "Unique identifier for each supplier (format: SUP###)"},
+        "supplier_name": {"type": "string", "description": "Company name of the supplier"},
+        "contact_email": {"type": "string", "description": "Primary contact email for orders"},
+        "country": {"type": "string", "description": "Country where supplier is based"},
+        "lead_time_days": {"type": "integer", "description": "Average days from order to delivery"},
+        "reliability_rating": {"type": "decimal", "description": "Performance score from 1.0 to 5.0"}
+      }
+    }
+  },
+  "relationships": [
+    {"from": "orders.customer_id", "to": "customers.customer_id", "type": "many-to-one"},
+    {"from": "order_items.order_id", "to": "orders.order_id", "type": "many-to-one"},
+    {"from": "order_items.product_id", "to": "products.product_id", "type": "many-to-one"},
+    {"from": "products.supplier_id", "to": "suppliers.supplier_id", "type": "many-to-one"}
+  ]
+}
+
