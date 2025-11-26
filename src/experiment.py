@@ -11,16 +11,22 @@ from typing import Any
 from google import genai
 
 from .csv_to_english import convert_all_to_english
-from .data_loader import get_all_csv_as_string, load_metadata
+from .data_loader import (
+    get_all_csv_as_string,
+    get_all_data_as_json,
+    load_metadata,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class DataFormat(str, Enum):
-    """The three data formats we're testing."""
+    """The data formats we're testing."""
     RAW_CSV = "raw_csv"
     CSV_WITH_METADATA = "csv_with_metadata"
     ENGLISH_SENTENCES = "english_sentences"
+    JSON = "json"
+    JSON_WITH_METADATA = "json_with_metadata"
 
 
 @dataclass
@@ -183,6 +189,24 @@ Here is the data in CSV format:
         return f"""Here is the e-commerce data described in natural language:
 
 {english_data}"""
+    
+    elif data_format == DataFormat.JSON:
+        json_data = get_all_data_as_json()
+        return f"""Here is the data in JSON format:
+
+{json_data}"""
+    
+    elif data_format == DataFormat.JSON_WITH_METADATA:
+        metadata = load_metadata()
+        metadata_str = json.dumps(metadata, indent=2)
+        json_data = get_all_data_as_json()
+        return f"""Here is the database schema metadata:
+
+{metadata_str}
+
+Here is the data in JSON format:
+
+{json_data}"""
     
     else:
         raise ValueError(f"Unknown data format: {data_format}")

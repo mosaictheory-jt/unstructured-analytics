@@ -15,7 +15,12 @@ from fastapi.responses import HTMLResponse, StreamingResponse
 from pydantic import BaseModel
 
 from .csv_to_english import convert_all_to_english
-from .data_loader import get_all_csv_as_string, load_all_tables, load_metadata
+from .data_loader import (
+    get_all_csv_as_string,
+    get_all_data_as_json,
+    load_all_tables,
+    load_metadata,
+)
 from .experiment import (
     RESEARCH_QUESTIONS,
     ComparisonResult,
@@ -80,7 +85,7 @@ async def home():
 
 @app.get("/api/data/preview")
 async def get_data_preview():
-    """Get a preview of the data in all three formats."""
+    """Get a preview of the data in all formats."""
     tables = load_all_tables()
     
     return {
@@ -90,6 +95,11 @@ async def get_data_preview():
             "csv_data": get_all_csv_as_string()
         },
         "english": convert_all_to_english(),
+        "json": get_all_data_as_json(),
+        "json_with_metadata": {
+            "metadata": load_metadata(),
+            "data": get_all_data_as_json()
+        },
         "table_counts": {name: len(df) for name, df in tables.items()}
     }
 
@@ -242,10 +252,16 @@ async def run_comparison_endpoint(request: QuestionRequest):
 
 @app.post("/api/experiment/parallel")
 async def run_parallel_experiment(request: QuestionRequest):
-    """Run comparison experiment with all three formats in parallel."""
+    """Run comparison experiment with all formats in parallel."""
     import concurrent.futures
     
-    formats = [DataFormat.RAW_CSV, DataFormat.CSV_WITH_METADATA, DataFormat.ENGLISH_SENTENCES]
+    formats = [
+        DataFormat.RAW_CSV,
+        DataFormat.CSV_WITH_METADATA,
+        DataFormat.ENGLISH_SENTENCES,
+        DataFormat.JSON,
+        DataFormat.JSON_WITH_METADATA,
+    ]
     results = {}
     
     def run_format(data_format: DataFormat):
@@ -273,7 +289,7 @@ async def run_parallel_experiment(request: QuestionRequest):
             return data_format.value, {"error": str(e)}
     
     # Run all formats in parallel using ThreadPoolExecutor
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
         futures = {executor.submit(run_format, fmt): fmt for fmt in formats}
         for future in concurrent.futures.as_completed(futures):
             fmt_value, result = future.result()
@@ -627,6 +643,16 @@ def get_html_page() -> str:
         .format-badge.english {
             background: rgba(64, 224, 208, 0.15);
             color: #40e0d0;
+        }
+        
+        .format-badge.json {
+            background: rgba(255, 165, 0, 0.15);
+            color: #ffa500;
+        }
+        
+        .format-badge.json-meta {
+            background: rgba(255, 99, 71, 0.15);
+            color: #ff6347;
         }
         
         .result-stats {
@@ -1460,7 +1486,7 @@ def get_html_page() -> str:
     <div class="app-container">
         <header class="header">
             <h1 class="logo">Structured Unstructured Reasoning</h1>
-            <p class="tagline">Comparing LLM performance: CSV vs CSV + Metadata vs Natural Language</p>
+            <p class="tagline">Comparing LLM performance: CSV vs JSON vs Natural Language (with and without metadata)</p>
         </header>
         
         <section class="data-explorer">
@@ -1988,7 +2014,9 @@ def get_html_page() -> str:
         const formatConfig = {
             'raw_csv': {name: 'Raw CSV', badge: 'csv'},
             'csv_with_metadata': {name: 'CSV + Metadata', badge: 'meta'},
-            'english_sentences': {name: 'Natural Language', badge: 'english'}
+            'english_sentences': {name: 'Natural Language', badge: 'english'},
+            'json': {name: 'JSON', badge: 'json'},
+            'json_with_metadata': {name: 'JSON + Metadata', badge: 'json-meta'}
         };
         
         async function runExperiment() {

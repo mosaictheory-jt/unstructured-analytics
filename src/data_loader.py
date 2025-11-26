@@ -59,3 +59,14 @@ def get_all_csv_as_string() -> str:
         result.append(f"=== TABLE: {table_name} ===\n{content}")
     return "\n\n".join(result)
 
+
+def get_all_data_as_json() -> str:
+    """Get all tables as JSON format."""
+    tables = load_all_tables()
+    
+    data = {}
+    for table_name, df in sorted(tables.items()):
+        data[table_name] = df.to_dict(orient="records")
+    
+    return json.dumps(data, indent=2, default=str)
+
