@@ -163,6 +163,43 @@ RESEARCH_QUESTIONS = [
         "type": "complex_aggregation",
         "difficulty": "hard"
     },
+    # === HARD - Inference and pattern recognition ===
+    {
+        "question": "What customer attributes are most indicative of higher spending?",
+        "expected": "VIP segment customers and those in certain geographic regions tend to spend more",
+        "type": "inference",
+        "difficulty": "hard"
+    },
+    {
+        "question": "Which product characteristics correlate with higher sales volume?",
+        "expected": "Lower price points and certain categories like Electronics tend to have higher volume",
+        "type": "inference",
+        "difficulty": "hard"
+    },
+    {
+        "question": "Are there any suppliers whose products appear to be underperforming?",
+        "expected": "Analysis of supplier product sales vs catalog presence",
+        "type": "inference",
+        "difficulty": "hard"
+    },
+    {
+        "question": "What patterns do you notice in shipping method preferences across customer segments?",
+        "expected": "VIP customers may prefer express shipping; patterns vary by segment",
+        "type": "inference",
+        "difficulty": "hard"
+    },
+    {
+        "question": "Based on the data, which product categories might benefit from expanding inventory?",
+        "expected": "Categories with high sales velocity and good margins",
+        "type": "inference",
+        "difficulty": "hard"
+    },
+    {
+        "question": "What insights can you draw about customer loyalty from repeat purchase patterns?",
+        "expected": "Analysis of customers with multiple orders and their characteristics",
+        "type": "inference",
+        "difficulty": "hard"
+    },
 ]
 
 

@@ -258,9 +258,9 @@ async def run_parallel_experiment(request: QuestionRequest):
     formats = [
         DataFormat.RAW_CSV,
         DataFormat.CSV_WITH_METADATA,
-        DataFormat.ENGLISH_SENTENCES,
         DataFormat.JSON,
         DataFormat.JSON_WITH_METADATA,
+        DataFormat.ENGLISH_SENTENCES,
     ]
     results = {}
     
@@ -315,6 +315,26 @@ def get_html_page() -> str:
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Light mode (default) */
+            --bg-deep: #f5f7fa;
+            --bg-card: #ffffff;
+            --bg-elevated: #f0f2f5;
+            --border-subtle: #e0e4e8;
+            --border-accent: #c8cdd3;
+            --text-primary: #1a1a2e;
+            --text-secondary: #4a5568;
+            --text-muted: #718096;
+            --accent-cyan: #0891b2;
+            --accent-magenta: #db2777;
+            --accent-gold: #d97706;
+            --accent-emerald: #059669;
+            --gradient-cyan: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+            --gradient-magenta: linear-gradient(135deg, #db2777 0%, #be185d 100%);
+            --gradient-gold: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        [data-theme="dark"] {
             --bg-deep: #0a0a0f;
             --bg-card: #12121a;
             --bg-elevated: #1a1a25;
@@ -330,6 +350,7 @@ def get_html_page() -> str:
             --gradient-cyan: linear-gradient(135deg, #00d4ff 0%, #0099cc 100%);
             --gradient-magenta: linear-gradient(135deg, #ff006e 0%, #cc0055 100%);
             --gradient-gold: linear-gradient(135deg, #ffd60a 0%, #cc9900 100%);
+            --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         
         * {
@@ -390,6 +411,67 @@ def get_html_page() -> str:
             font-weight: 400;
         }
         
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .theme-toggle:hover {
+            border-color: var(--accent-cyan);
+        }
+        
+        .theme-toggle-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .theme-toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: var(--border-subtle);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: var(--bg-card);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        [data-theme="dark"] .theme-toggle-switch {
+            background: var(--accent-cyan);
+        }
+        
+        [data-theme="dark"] .theme-toggle-switch::after {
+            left: 22px;
+        }
+        
+        .theme-icon {
+            font-size: 1rem;
+        }
+        
         /* Cards Grid */
         .experiment-grid {
             display: grid;
@@ -404,11 +486,13 @@ def get_html_page() -> str:
             border-radius: 16px;
             padding: 1.5rem;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-soft);
         }
         
         .card:hover {
             border-color: var(--border-accent);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
         
         .card-header {
@@ -451,6 +535,7 @@ def get_html_page() -> str:
             border-radius: 16px;
             padding: 2rem;
             margin-bottom: 2rem;
+            box-shadow: var(--shadow-soft);
         }
         
         .section-title {
@@ -607,6 +692,7 @@ def get_html_page() -> str:
             border-radius: 16px;
             margin-bottom: 1rem;
             overflow: hidden;
+            box-shadow: var(--shadow-soft);
         }
         
         .result-card-header {
@@ -912,6 +998,7 @@ def get_html_page() -> str:
             border-radius: 16px;
             margin-bottom: 2rem;
             overflow: hidden;
+            box-shadow: var(--shadow-soft);
         }
         
         .explorer-header {
@@ -1441,6 +1528,96 @@ def get_html_page() -> str:
             height: 16px;
         }
         
+        /* Caveats Section */
+        .caveats-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .caveats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .caveats-header:hover {
+            color: var(--text-primary);
+            background: rgba(0,0,0,0.02);
+        }
+        
+        [data-theme="dark"] .caveats-header:hover {
+            background: rgba(255,255,255,0.02);
+        }
+        
+        .caveats-content {
+            display: none;
+            padding: 0 1.5rem 1.5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+        
+        .caveats-content.visible {
+            display: block;
+        }
+        
+        .caveat-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        
+        .caveat-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        
+        .caveat-item:first-child {
+            padding-top: 1rem;
+        }
+        
+        .caveat-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        
+        .caveat-text {
+            flex: 1;
+        }
+        
+        .caveat-text strong {
+            display: block;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.35rem;
+        }
+        
+        .caveat-text p {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin: 0;
+        }
+        
         /* Footer */
         .footer {
             text-align: center;
@@ -1485,6 +1662,11 @@ def get_html_page() -> str:
 <body>
     <div class="app-container">
         <header class="header">
+            <div class="theme-toggle" onclick="toggleTheme()">
+                <span class="theme-icon" id="theme-icon">☀️</span>
+                <div class="theme-toggle-switch"></div>
+                <span class="theme-icon">🌙</span>
+            </div>
             <h1 class="logo">Structured Unstructured Reasoning</h1>
             <p class="tagline">Comparing LLM performance: CSV vs JSON vs Natural Language (with and without metadata)</p>
         </header>
@@ -1587,6 +1769,64 @@ def get_html_page() -> str:
             </div>
         </section>
         
+        <section class="caveats-section">
+            <div class="caveats-header" onclick="toggleCaveats()">
+                <span>📋 Research Caveats & Limitations</span>
+                <span id="caveats-toggle">▼</span>
+            </div>
+            <div class="caveats-content" id="caveats-content">
+                <div class="caveat-item">
+                    <div class="caveat-number">1</div>
+                    <div class="caveat-text">
+                        <strong>Data Selection in Practice</strong>
+                        <p>In production systems, practitioners typically select only relevant data subsets or retrieve data via tools/RAG. This can result in context that is either too narrow (missing relevant information) or too wide (including noise).</p>
+                    </div>
+                </div>
+                <div class="caveat-item">
+                    <div class="caveat-number">2</div>
+                    <div class="caveat-text">
+                        <strong>Alternative Data Formats</strong>
+                        <p>Many other formats exist for passing structured data to LLMs, including XML, YAML, Markdown tables, SQL schemas, and domain-specific formats. Results may vary significantly across formats not tested here.</p>
+                    </div>
+                </div>
+                <div class="caveat-item">
+                    <div class="caveat-number">3</div>
+                    <div class="caveat-text">
+                        <strong>Zero-Shot Prompting Only</strong>
+                        <p>All experiments use zero-shot prompting. Few-shot examples, chain-of-thought prompting, and other strategies can significantly impact results and may favor different data formats.</p>
+                    </div>
+                </div>
+                <div class="caveat-item">
+                    <div class="caveat-number">4</div>
+                    <div class="caveat-text">
+                        <strong>Small Dataset Scale</strong>
+                        <p>This experiment uses a small e-commerce dataset (~50 records). Performance characteristics may differ significantly with larger datasets where context window limits, chunking strategies, and summarization become factors.</p>
+                    </div>
+                </div>
+                <div class="caveat-item">
+                    <div class="caveat-number">5</div>
+                    <div class="caveat-text">
+                        <strong>Model-Specific Results</strong>
+                        <p>Results are specific to the Gemini model family. Other LLMs (GPT-4, Claude, Llama, etc.) may exhibit different preferences and performance characteristics across data formats.</p>
+                    </div>
+                </div>
+                <div class="caveat-item">
+                    <div class="caveat-number">6</div>
+                    <div class="caveat-text">
+                        <strong>Token Cost vs. Accuracy Trade-off</strong>
+                        <p>Different formats have vastly different token counts. JSON uses ~3x more tokens than CSV for the same data. Cost-effectiveness depends on your accuracy requirements and budget constraints.</p>
+                    </div>
+                </div>
+                <div class="caveat-item">
+                    <div class="caveat-number">7</div>
+                    <div class="caveat-text">
+                        <strong>No Automated Validation</strong>
+                        <p>Answers are not automatically validated against ground truth. Manual inspection is required to assess correctness, and subtle errors in reasoning may go undetected.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <footer class="footer">
             Research project exploring how data representation affects LLM comprehension and accuracy.
         </footer>
@@ -1596,6 +1836,31 @@ def get_html_page() -> str:
         let schemaData = null;
         let availableModels = [];
         let activeTable = null;
+        
+        // Theme management
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? null : 'dark';
+            
+            if (newTheme) {
+                html.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                html.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        // Initialize theme - always start in light mode
+        function initTheme() {
+            // Always start in light mode, clear any saved preference
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'light');
+        }
+        
+        // Run theme init immediately
+        initTheme();
         
         async function init() {
             // Load preset questions grouped by difficulty
@@ -1612,7 +1877,7 @@ def get_html_page() -> str:
             container.innerHTML = Object.entries(byDifficulty).map(([diff, questions]) => `
                 <div class="difficulty-group">
                     <span class="difficulty-label ${diff}">${diff}</span>
-                    ${questions.slice(0, 3).map(q => 
+                    ${questions.map(q => 
                         `<button class="preset-btn ${diff}" onclick="setQuestion('${q.question.replace(/'/g, "\\\\'")}')">${q.question.substring(0, 45)}${q.question.length > 45 ? '...' : ''}</button>`
                     ).join('')}
                 </div>
@@ -1990,6 +2255,13 @@ def get_html_page() -> str:
             toggle.textContent = content.classList.contains('visible') ? '▲' : '▼';
         }
         
+        function toggleCaveats() {
+            const content = document.getElementById('caveats-content');
+            const toggle = document.getElementById('caveats-toggle');
+            content.classList.toggle('visible');
+            toggle.textContent = content.classList.contains('visible') ? '▲' : '▼';
+        }
+        
         function getSettings() {
             return {
                 model: document.getElementById('model-select').value,
@@ -2014,9 +2286,9 @@ def get_html_page() -> str:
         const formatConfig = {
             'raw_csv': {name: 'Raw CSV', badge: 'csv'},
             'csv_with_metadata': {name: 'CSV + Metadata', badge: 'meta'},
-            'english_sentences': {name: 'Natural Language', badge: 'english'},
             'json': {name: 'JSON', badge: 'json'},
-            'json_with_metadata': {name: 'JSON + Metadata', badge: 'json-meta'}
+            'json_with_metadata': {name: 'JSON + Metadata', badge: 'json-meta'},
+            'english_sentences': {name: 'Natural Language', badge: 'english'}
         };
         
         async function runExperiment() {
